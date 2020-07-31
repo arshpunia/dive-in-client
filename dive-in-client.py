@@ -3,6 +3,7 @@ import json
 import sys
 import webbrowser as wb
 import os
+import random
 
 ##Supported modes
 ##gac: Get auth code
@@ -75,18 +76,42 @@ def get_user_auth_code():
 
 def get_articles_list():
     is_valid, uatoken = get_user_auth_code()
+    articles_list = {}
     if is_valid:
         print("Token is valid")
         url = "https://6imslhj39g.execute-api.ca-central-1.amazonaws.com/default/LambdaTest"
         sample_event = {'mode':'gar','token':uatoken}
         resp = requests.post(url,sample_event)
-        print(str(json.loads(resp.text)))
-        print(json.loads(resp.text))
+        articles_list = json.loads(resp.text)['body']['list']
+        
     else: 
         print("Invalid token")
+    
+    return articles_list
+
+def choose_random_article(article_list):
+    register_browser()
+    article_count = len(article_list.keys())
+    print(str(article_count))
+    article_num = random.randint(0,article_count-1) 
+    print(str(article_num))
+    
+    cc = 0
+    for key in article_list.keys():
+        if cc == article_num:
+            print(article_list[key]['given_title'])
+            print(article_list[key]['given_url'])
+            wb.get('chrome').open(article_list[key]['given_url'])
+            break
+        else:
+            cc+=1
+    
+    ##for header in article_list.keys():
+        ##print(article_list[header]['given_title'])
 
 def main():
-    get_articles_list()
+    user_articles = get_articles_list()
+    choose_random_article(user_articles)
     ##code = get_auth_code()['body']
     ##auth_status, uak = authorize_app(code)
     ##if auth_status:
