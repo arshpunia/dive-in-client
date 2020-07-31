@@ -2,10 +2,12 @@ import requests
 import json
 import sys
 import webbrowser as wb
+import os
 
 ##Supported modes
 ##gac: Get auth code
 ##gak: Get user access key
+##gar: Get articles
 
 def get_auth_code():
     url = "https://6imslhj39g.execute-api.ca-central-1.amazonaws.com/default/LambdaTest"
@@ -55,17 +57,41 @@ def authorize_app(code):
         except Exceeption as e:
             print(e)
     return (auth_successful,uak)
+
 def write_to_file(text):
     with open('access_token.txt','w') as f:
         f.write(text)
     f.close()
 
+def get_user_auth_code():
+    valid_token = False
+    uatoken = ''
+    if os.path.exists('./access_token.txt'):
+        with open('access_token.txt') as at:
+            uatoken = at.read().strip('\n')
+        at.close()
+        valid_token = True
+    return (valid_token, uatoken)
+
+def get_articles_list():
+    is_valid, uatoken = get_user_auth_code()
+    if is_valid:
+        print("Token is valid")
+        url = "https://6imslhj39g.execute-api.ca-central-1.amazonaws.com/default/LambdaTest"
+        sample_event = {'mode':'gar','token':uatoken}
+        resp = requests.post(url,sample_event)
+        print(str(json.loads(resp.text)))
+        print(json.loads(resp.text))
+    else: 
+        print("Invalid token")
+
 def main():
-    code = get_auth_code()['body']
-    ##generate_auth_url(code)
-    auth_status, uak = authorize_app(code)
-    if auth_status:
-        write_to_file(uak)
+    get_articles_list()
+    ##code = get_auth_code()['body']
+    ##auth_status, uak = authorize_app(code)
+    ##if auth_status:
+      ##  write_to_file(uak)
+    
     
 if __name__=="__main__":
     main()
