@@ -20,7 +20,8 @@ def get_auth_code():
 
 def generate_auth_url(req_code):
     auth_url = "https://getpocket.com/auth/authorize?request_token="+req_code+"&redirect_uri=https://google.com"
-    print(auth_url)
+    print("Authorization URL: "+auth_url)
+    print("If browser window does not open automatically, please paste the above URL into your browser")
     return auth_url   
 
 def generate_access_token(code):
@@ -49,7 +50,7 @@ def authorize_app(code):
     uak = ''
     while True:
         try:
-            confirmed = input("Press y if you confirmed it: ")
+            confirmed = input("Press y if you allowed dive-in access to your Pocket collection: ")
             if confirmed == "y":
                 uak = get_user_access_key(code)['body'][13:]
                 auth_successful = True
@@ -60,42 +61,35 @@ def authorize_app(code):
     return (auth_successful,uak)
 
 def write_to_file(text):
-    with open('access_token.txt','w') as f:
+    with open('.access_token.txt','w') as f:
         f.write(text)
     f.close()
 
 def get_user_auth_code():
-    valid_token = False
     uatoken = ''
-    if os.path.exists('./access_token.txt'):
-        with open('access_token.txt') as at:
-            uatoken = at.read().strip('\n')
-        at.close()
-        valid_token = True
-    return (valid_token, uatoken)
+    with open('./.access_token.txt') as at:
+        uatoken = at.read().strip('\n')
+    at.close()
+    return uatoken
 
 def get_articles_list():
-    is_valid, uatoken = get_user_auth_code()
+    uatoken = get_user_auth_code()
     articles_list = {}
-    if is_valid:
-        print("Token is valid")
-        url = "https://6imslhj39g.execute-api.ca-central-1.amazonaws.com/default/LambdaTest"
-        sample_event = {'mode':'gar','token':uatoken}
-        resp = requests.post(url,sample_event)
-        articles_list = json.loads(resp.text)['body']['list']
-        
-    else: 
-        print("Invalid token")
     
+    url = "https://6imslhj39g.execute-api.ca-central-1.amazonaws.com/default/LambdaTest"
+    sample_event = {'mode':'gar','token':uatoken}
+    resp = requests.post(url,sample_event)
+    if 'message' in json.loads(resp.text):
+        print("There was an error in retreiving your articles.\nPlease reauthenticate the app by deleting the .access_token.txt file and try again.")
+        articles_list = {'123456789':{'given_title':'Help Document','given_url':'https://github.com/arshpunia/dive-in-client'}}
+    else:
+        articles_list = json.loads(resp.text)['body']['list']
     return articles_list
 
 def choose_random_article(article_list):
     register_browser()
     article_count = len(article_list.keys())
-    print(str(article_count))
     article_num = random.randint(0,article_count-1) 
-    print(str(article_num))
-    
     cc = 0
     for key in article_list.keys():
         if cc == article_num:
@@ -105,9 +99,6 @@ def choose_random_article(article_list):
             break
         else:
             cc+=1
-    
-    ##for header in article_list.keys():
-        ##print(article_list[header]['given_title'])
 
 def main():
     user_articles = get_articles_list()
