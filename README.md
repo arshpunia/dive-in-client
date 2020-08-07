@@ -28,8 +28,8 @@ If you ran the script and landed here, chances are there is something wrong with
 If the issue persists after trying these steps, please open an issue/contact me. I'd be happy to troubleshoot with you.
 
 # Privacy policy
-The privacy policy of dive-in is simple: No user-data is collected. Ever.
-The programs collect no metrics whatsoever, and no data about your Pocket collection is ever logged. The program does one thing, and one thing only, retreive a random article and open it up for you.
+The privacy policy of dive-in is simple: No user-data is collected. Ever. <br>
+The programs collect no metrics whatsoever, and no data about your Pocket collection is ever logged. The program does one thing, and one thing only, retreive a random article and open it up for you. <br>
 If however, you still want to stop using dive-in, you can simply go to your [connected applications](https://getpocket.com/connected_applications) and remove access for dive-in 
 
 # The Architecture
