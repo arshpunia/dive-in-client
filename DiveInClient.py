@@ -42,10 +42,11 @@ def get_user_access_key(code):
     return json.loads(resp.text)    
     
 def authorize_app(code):
-    register_browser()
+    ##register_browser()
     auth_url = generate_auth_url(code)
     
-    wb.get('chrome').open(str(auth_url))
+    ##wb.get('chrome').open(str(auth_url))
+    wb.open(str(auth_url))
     auth_successful = False
     uak = ''
     while True:
@@ -81,13 +82,13 @@ def get_articles_list():
     resp = requests.post(url,sample_event)
     if 'message' in json.loads(resp.text):
         print("There was an error in retreiving your articles.\nPlease reauthenticate the app by deleting the .access_token.txt file and try again.")
-        articles_list = {'123456789':{'given_title':'Help Document','given_url':'https://github.com/arshpunia/dive-in-client'}}
+        articles_list = {'123456789':{'given_title':'Help Document','given_url':'https://github.com/arshpunia/dive-in-client/blob/master/README.md#help-the-script-is-redirecting-me-to-this-page'}}
     else:
         articles_list = json.loads(resp.text)['body']['list']
     return articles_list
 
 def choose_random_article(article_list):
-    register_browser()
+    ##register_browser()
     article_count = len(article_list.keys())
     article_num = random.randint(0,article_count-1) 
     cc = 0
@@ -95,7 +96,8 @@ def choose_random_article(article_list):
         if cc == article_num:
             print(article_list[key]['given_title'])
             print(article_list[key]['given_url'])
-            wb.get('chrome').open(article_list[key]['given_url'])
+            ##wb.get('chrome').open(article_list[key]['given_url'])
+            wb.open(article_list[key]['given_url'])
             break
         else:
             cc+=1
