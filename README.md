@@ -1,6 +1,6 @@
 # dive-in-client
-In using [Pocket](https://app.getpocket.com/), I had faced the issue of picking from only the items at the top of my collection, and the ones below were often forgotten/ignored.<br>
-dive-in-client aims to level the playing field by retreiving a random article from the user's Pocket collection. 
+In using [Pocket](https://app.getpocket.com/), I had faced the issue of picking from only the items at the top of my collection, and the ones in the middle were often forgotten/ignored.<br>
+dive-in-client aims to level the playing field by retreiving a random article from the user's Pocket collection (and saving you the effort of having to choose something)
 
 # Prerequisites
 * Python 3.8+ [Download](https://www.python.org/downloads/)
